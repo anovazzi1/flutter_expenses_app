@@ -1,18 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
-class TransactionList extends StatefulWidget {
-  @override
-  _TransactionListState createState() => _TransactionListState();
-}
+class TransactionList extends StatelessWidget {
+  final List<Transaction> _transactions;
+  TransactionList(this._transactions);
 
-class _TransactionListState extends State<TransactionList> {
-  final List<Transaction> transactions = [
-    Transaction(amount: 100.0, date: DateTime.now(), id: 't1', title: 'Shoes')
-  ];
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        return Card(
+          child: Row(
+            children: [
+              Container(
+                child: Text(
+                  '\$${_transactions[index].amount}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                      fontSize: 20),
+                ),
+                margin:
+                EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                decoration:
+                BoxDecoration(border: Border.all(color: Colors.red)),
+                padding: EdgeInsets.all(10),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _transactions[index].title as String,
+                    style: TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    DateFormat.yMMMd().format(_transactions[index].date!),
+                    style: TextStyle(color: Colors.purple.shade300),
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
+      itemCount: _transactions.length,
+    );
   }
 }
