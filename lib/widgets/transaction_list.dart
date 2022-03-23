@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
+  final Function delete;
   final List<Transaction> _transactions;
-  TransactionList(this._transactions);
+  TransactionList(this._transactions,this.delete);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,9 @@ class TransactionList extends StatelessWidget {
           ? Column(
               children: [
                 Text("No transactions added yet"),
-                SizedBox.square(dimension: 10,),
+                SizedBox.square(
+                  dimension: 10,
+                ),
                 Container(
                   height: 250,
                   width: double.infinity,
@@ -29,40 +32,21 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (context, index) {
                 return Card(
-                  child: Row(
-                    children: [
-                      Container(
-                        child: Text(
-                          '\$${_transactions[index].amount}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                              fontSize: 20),
-                        ),
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.red)),
-                        padding: EdgeInsets.all(10),
+                  elevation: 6,
+                    child: ListTile(
+                      trailing: IconButton(onPressed:(){delete(_transactions[index].id);} ,icon: Icon(Icons.delete_outline,color: Theme.of(context).errorColor,),),
+                  leading: CircleAvatar(
+                    radius: 30,
+                    child: Padding(
+                      padding: EdgeInsets.all(6),
+                      child: FittedBox(
+                        child: Text("\$${_transactions[index].amount}"),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _transactions[index].title as String,
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            DateFormat.yMMMd()
-                                .format(_transactions[index].date!),
-                            style: TextStyle(color: Colors.purple.shade300),
-                          )
-                        ],
-                      )
-                    ],
+                    ),
                   ),
-                );
+                      title: Text(_transactions[index].title,style: TextStyle(color: Colors.red),),
+                      subtitle: Text(DateFormat.yMMMd().format(_transactions[index].date)),
+                ));
               },
               itemCount: _transactions.length,
             ),

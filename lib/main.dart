@@ -23,7 +23,8 @@ class MyApp extends StatelessWidget {
               TextStyle(fontFamily: 'Quicksand', fontWeight: FontWeight.bold,fontSize: 25),
         ),
       textTheme: ThemeData.light().textTheme.copyWith(
-        headline6: TextStyle(fontFamily: "OpenSans",fontSize: 20)
+        headline6: TextStyle(fontFamily: "OpenSans",fontSize: 20),
+        button: TextStyle(color: Colors.blue)
       )),
       home: MyHomePage(),
     );
@@ -47,16 +48,24 @@ class _MyHomePageState extends State<MyHomePage> {
     ).toList();
   }
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount,DateTime choosenDate) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
         title: title,
         amount: amount,
-        date: DateTime.now());
+        date: choosenDate);
     setState(() {
       transactions.add(newTx);
     });
   }
+
+  void deleteTransaction(String id)
+  {
+    setState(() {
+      transactions.removeWhere((element) => element.id==id);
+    });
+  }
+
 
   void RunAddNewTransaction(BuildContext context) {
     showModalBottomSheet(
@@ -79,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Chart(_recentTransactions),
               width: double.infinity,
             ),
-            TransactionList(transactions),
+            TransactionList(transactions,deleteTransaction),
           ],
         ),
       ),
